@@ -9,7 +9,7 @@ services:
       - "url=https://example.com"
     volumes:
       - ./data:/var/lib/ghost/content
-      - ./config.production-cf.json:/var/lib/ghost/config.production.json
+      - ./config.production.json:/var/lib/ghost/config.production.json
       - ./post.hbs:/var/lib/ghost/current/content/themes/casper/post.hbs
     networks:
       - app
