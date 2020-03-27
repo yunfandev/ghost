@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  ghost:
+    container_name: ghost
+    image: yunfandev/ghost:cloudinary
+    restart: always
+    environment: 
+      - "url=https://example.com"
+    volumes:
+      - ./data:/var/lib/ghost/content
+      - ./config.production-cf.json:/var/lib/ghost/config.production.json
+      - ./post.hbs:/var/lib/ghost/current/content/themes/casper/post.hbs
+    networks:
+      - app
+
+networks:
+  app:
+    external: true
