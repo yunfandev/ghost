@@ -27,5 +27,5 @@ jobs:
       env:
         USER_NAME: ${{ secrets.USER_NAME }}
       run: |
-        docker build . --file Dockerfile --tag $USER_NAME:cloudinary
-        docker push $USER_NAME:cloudinary
+        docker build . --file Dockerfile --tag $USER_NAME/ghost:cloudinary
+        docker push $USER_NAME/ghost:cloudinary
