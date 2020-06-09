@@ -1,0 +1,31 @@
+name: Docker Image CI
+
+on:
+  schedule:
+    - cron: 0 0 * * *
+  push:
+    branches:
+    - master
+    - release/*
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker login
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}  
+        PASSWORD: ${{ secrets.PASSWORD }}
+      run: |
+        docker login -u $USER_NAME -p $PASSWORD
+
+    - name: Build the Docker image
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}
+      run: |
+        docker build . --file Dockerfile --tag $USER_NAME:cloudinary
+        docker push $USER_NAME:cloudinary
