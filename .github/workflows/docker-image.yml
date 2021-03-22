@@ -38,3 +38,10 @@ jobs:
         docker pull $USER_NAME/ghost:3-cloudinary || :
         docker build --cache-from $USER_NAME/ghost:3-cloudinary --pull . --file Dockerfile.v3 --tag $USER_NAME/ghost:3-cloudinary
         docker push $USER_NAME/ghost:3-cloudinary
+
+    - name: Docker logout
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+      run: |
+        docker logout
