@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   schedule:
-    - cron: 0 1 * * *
+    - cron: 0 9 * * *
   push:
     branches:
     - master
@@ -12,36 +12,27 @@ jobs:
 
   build:
 
-    runs-on: Ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+
     - name: Docker login
       env:
         USER_NAME: ${{ secrets.USER_NAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
       run: |
+        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         docker login -u $USER_NAME -p $PASSWORD
+        docker buildx create --use
 
     - name: Build the Docker image
       env:
         USER_NAME: ${{ secrets.USER_NAME }}
       run: |
         docker pull $USER_NAME/ghost:cloudinary || :
-        docker build --cache-from $USER_NAME/ghost:cloudinary --pull . --file Dockerfile --tag $USER_NAME/ghost:cloudinary
-        docker push $USER_NAME/ghost:cloudinary
-
-    - name: Build the v3 Docker image
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-      run: |
-        docker pull $USER_NAME/ghost:3-cloudinary || :
-        docker build --cache-from $USER_NAME/ghost:3-cloudinary --pull . --file Dockerfile.v3 --tag $USER_NAME/ghost:3-cloudinary
-        docker push $USER_NAME/ghost:3-cloudinary
-
-    - name: Docker logout
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        PASSWORD: ${{ secrets.PASSWORD }}
-      run: |
-        docker logout
+        docker buildx build --push --platform linux/arm64/v8,linux/amd64 --cache-from $USER_NAME/ghost:cloudinary --pull --file Dockerfile --tag $USER_NAME/ghost:cloudinary .
