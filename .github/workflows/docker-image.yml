@@ -35,4 +35,4 @@ jobs:
         USER_NAME: ${{ secrets.USER_NAME }}
       run: |
         docker pull $USER_NAME/ghost:cloudinary || :
-        docker buildx build --push --platform linux/amd64 --cache-from $USER_NAME/ghost:cloudinary --pull --file Dockerfile --tag $USER_NAME/ghost:cloudinary .
+        docker buildx build --push --platform linux/arm64/v8,linux/amd64 --cache-from $USER_NAME/ghost:cloudinary --pull --file Dockerfile --tag $USER_NAME/ghost:cloudinary .
