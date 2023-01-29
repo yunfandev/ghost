@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker
 
 on:
   schedule:
@@ -30,9 +30,16 @@ jobs:
         docker login -u $USER_NAME -p $PASSWORD
         docker buildx create --use
 
-    - name: Build the Docker image
+    - name: Build the cloudinary image
       env:
         USER_NAME: ${{ secrets.USER_NAME }}
       run: |
         docker pull $USER_NAME/ghost:cloudinary || :
-        docker buildx build --push --platform linux/arm64/v8,linux/amd64 --cache-from $USER_NAME/ghost:cloudinary --pull --file Dockerfile --tag $USER_NAME/ghost:cloudinary .
+        docker buildx build --push --platform linux/arm64/v8,linux/amd64 --cache-from $USER_NAME/ghost:cloudinary --pull --file Dockerfile.cloudinary --tag $USER_NAME/ghost:cloudinary .
+
+    - name: Build the s3 image
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}
+      run: |
+        docker pull $USER_NAME/ghost:s3 || :
+        docker buildx build --push --platform linux/arm64/v8,linux/amd64 --cache-from $USER_NAME/ghost:s3 --pull --file Dockerfile.s3 --tag $USER_NAME/ghost:s3 .

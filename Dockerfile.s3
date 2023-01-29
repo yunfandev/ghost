@@ -1,0 +1,8 @@
+FROM ghost:5-alpine as s3
+RUN su-exec node yarn add ghost-storage-adapter-s3
+
+FROM ghost:5-alpine
+COPY --chown=node:node --from=s3 $GHOST_INSTALL/node_modules $GHOST_INSTALL/node_modules
+COPY --chown=node:node --from=s3 $GHOST_INSTALL/node_modules/ghost-storage-adapter-s3 $GHOST_INSTALL/content/adapters/s3
+RUN set -ex; \
+    su-exec node ghost config storage.active s3;

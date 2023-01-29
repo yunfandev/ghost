@@ -6,6 +6,8 @@
   },
   "database": {
     "client": "sqlite3",
+    "debug": false,
+    "useNullAsDefault": true,
     "connection": {
       "filename": "/var/lib/ghost/content/data/ghost.db"
     }
