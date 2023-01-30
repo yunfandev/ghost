@@ -8,11 +8,13 @@ services:
     environment: 
       - "url=https://example.com"
     volumes:
-      - ./data:/var/lib/ghost/content
-      - ./config.production.json:/var/lib/ghost/config.production.json
-      - ./post.hbs:/var/lib/ghost/current/content/themes/casper/post.hbs
+      - data:/var/lib/ghost/content
+      - ./config.production-s3.json:/var/lib/ghost/config.production.json
     networks:
       - app
+
+volumes:
+  data:
 
 networks:
   app:
